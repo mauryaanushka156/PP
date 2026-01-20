@@ -1,0 +1,27 @@
+{
+  "name": "progress-point-pwa",
+  "version": "1.0.0",
+  "description": "Progress Point - A comprehensive productivity PWA",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "start-fixed": "node server/index-fixed.js",
+    "minimal": "node minimal-server.js",
+    "dev": "nodemon server/index.js",
+    "test": "node test-server.js",
+    "simple": "node simple-server.js"
+  },
+  "keywords": ["pwa", "productivity", "todo", "habits"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "body-parser": "^1.20.2",
+    "sqlite3": "^5.1.6",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

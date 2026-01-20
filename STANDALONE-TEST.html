@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress Point - Standalone Test</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            padding: 2rem;
+            background: #1a1a1a;
+            color: #f5f5f5;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #2a2a2a;
+            padding: 2rem;
+            border: 2px solid #4a4a4a;
+        }
+        h1 { color: #2563eb; margin-bottom: 1rem; }
+        .test-item {
+            padding: 1rem;
+            margin: 0.5rem 0;
+            background: #3a3a3a;
+            border: 1px solid #4a4a4a;
+        }
+        .success { color: #10b981; }
+        .error { color: #ef4444; }
+        .info { color: #3b82f6; }
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            margin: 0.5rem 0.5rem 0.5rem 0;
+            font-size: 1rem;
+        }
+        button:hover { background: #1e40af; }
+        pre {
+            background: #1a1a1a;
+            padding: 1rem;
+            overflow-x: auto;
+            border: 1px solid #4a4a4a;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Progress Point - System Test</h1>
+        <p class="info">This page tests if your browser can run the app. No server needed!</p>
+        
+        <div class="test-item">
+            <h3>Test 1: Browser Support</h3>
+            <p id="browserTest">Testing...</p>
+        </div>
+        
+        <div class="test-item">
+            <h3>Test 2: Local Storage</h3>
+            <p id="storageTest">Testing...</p>
+        </div>
+        
+        <div class="test-item">
+            <h3>Test 3: IndexedDB</h3>
+            <p id="indexedDBTest">Testing...</p>
+        </div>
+        
+        <div class="test-item">
+            <h3>Test 4: Service Worker</h3>
+            <p id="swTest">Testing...</p>
+        </div>
+        
+        <div class="test-item">
+            <h3>Instructions</h3>
+            <p>If all tests pass, your browser is ready!</p>
+            <p><strong>To run the full app:</strong></p>
+            <ol style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                <li>Make sure Node.js is installed</li>
+                <li>Open terminal in project folder</li>
+                <li>Run: <code>npm install</code></li>
+                <li>Run: <code>npm start</code></li>
+                <li>Open: <code>http://localhost:3000</code></li>
+            </ol>
+        </div>
+        
+        <button onclick="runTests()">Run Tests Again</button>
+        <button onclick="window.location.href='index.html'">Try Main App</button>
+    </div>
+
+    <script>
+        function runTests() {
+            // Test 1: Browser
+            const browserOk = typeof fetch !== 'undefined' && typeof Promise !== 'undefined';
+            document.getElementById('browserTest').innerHTML = 
+                browserOk ? '<span class="success">✓ Modern browser detected</span>' : 
+                '<span class="error">✗ Browser too old - update your browser</span>';
+            
+            // Test 2: Local Storage
+            try {
+                localStorage.setItem('test', 'ok');
+                const test = localStorage.getItem('test');
+                localStorage.removeItem('test');
+                document.getElementById('storageTest').innerHTML = 
+                    test === 'ok' ? '<span class="success">✓ Local Storage works</span>' : 
+                    '<span class="error">✗ Local Storage not working</span>';
+            } catch(e) {
+                document.getElementById('storageTest').innerHTML = 
+                    '<span class="error">✗ Local Storage blocked: ' + e.message + '</span>';
+            }
+            
+            // Test 3: IndexedDB
+            if ('indexedDB' in window) {
+                const request = indexedDB.open('test-db', 1);
+                request.onsuccess = () => {
+                    indexedDB.deleteDatabase('test-db');
+                    document.getElementById('indexedDBTest').innerHTML = 
+                        '<span class="success">✓ IndexedDB works</span>';
+                };
+                request.onerror = () => {
+                    document.getElementById('indexedDBTest').innerHTML = 
+                        '<span class="error">✗ IndexedDB not available</span>';
+                };
+            } else {
+                document.getElementById('indexedDBTest').innerHTML = 
+                    '<span class="error">✗ IndexedDB not supported</span>';
+            }
+            
+            // Test 4: Service Worker
+            if ('serviceWorker' in navigator) {
+                document.getElementById('swTest').innerHTML = 
+                    '<span class="success">✓ Service Worker supported</span>';
+            } else {
+                document.getElementById('swTest').innerHTML = 
+                    '<span class="error">✗ Service Worker not supported (HTTPS required for production)</span>';
+            }
+        }
+        
+        runTests();
+    </script>
+</body>
+</html>
