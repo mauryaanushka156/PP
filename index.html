@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Progress Point - Your comprehensive productivity companion">
+    <meta name="theme-color" content="#1a1a1a">
+    <title>Progress Point</title>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="icon" href="/icon-192.svg" type="image/svg+xml">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="header">
+        <div class="header-container">
+            <h1 class="logo">Progress Point</h1>
+            <nav class="nav">
+                <button class="nav-btn" data-page="home" title="Home - Main dashboard">
+                    <span>🏠</span> Home
+                </button>
+                <button class="nav-btn" data-page="todo" title="Todo List - Manage your daily tasks">
+                    <span>✓</span> Todo List
+                </button>
+                <button class="nav-btn" data-page="habits" title="Habit Tracker - Build lasting habits">
+                    <span>📊</span> Habits
+                </button>
+                <button class="nav-btn" data-page="meditation" title="Meditation - Find your inner peace">
+                    <span>🧘</span> Meditation
+                </button>
+                <button class="nav-btn" data-page="study" title="Study Timer - Boost your productivity">
+                    <span>⏱️</span> Study Timer
+                </button>
+                <button class="nav-btn" data-page="stories" title="Motivational Stories - Get inspired">
+                    <span>📖</span> Stories
+                </button>
+            </nav>
+            <button class="theme-toggle" id="themeToggle" title="Toggle dark/light mode">
+                <span id="themeIcon">🌙</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Motivational Quotes Bar -->
+    <div class="quotes-bar" id="quotesBar">
+        <div class="quote-content">
+            <span class="quote-text" id="quoteText"></span>
+            <button class="quote-next" id="nextQuote" title="Next quote">→</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Home Page -->
+        <section class="page active" id="homePage">
+            <div class="page-header">
+                <h2>Welcome to Progress Point</h2>
+                <p>Your comprehensive productivity companion</p>
+            </div>
+            <div class="feature-grid">
+                <div class="feature-card" data-page="todo">
+                    <div class="feature-icon">✓</div>
+                    <h3>Todo List</h3>
+                    <p>Manage your daily tasks, track progress, and maintain streaks</p>
+                </div>
+                <div class="feature-card" data-page="habits">
+                    <div class="feature-icon">📊</div>
+                    <h3>Habit Tracker</h3>
+                    <p>Build lasting habits with 21-day challenges</p>
+                </div>
+                <div class="feature-card" data-page="meditation">
+                    <div class="feature-icon">🧘</div>
+                    <h3>Meditation</h3>
+                    <p>Find peace with guided meditation tracks and timers</p>
+                </div>
+                <div class="feature-card" data-page="study">
+                    <div class="feature-icon">⏱️</div>
+                    <h3>Study Timer</h3>
+                    <p>Boost productivity with Pomodoro and other techniques</p>
+                </div>
+                <div class="feature-card" data-page="stories">
+                    <div class="feature-icon">📖</div>
+                    <h3>Motivational Stories</h3>
+                    <p>Get inspired by stories of great achievers</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Todo List Page -->
+        <section class="page" id="todoPage">
+            <div class="page-header">
+                <h2>Todo List</h2>
+                <div class="page-actions">
+                    <button class="action-btn" id="addTaskBtn" title="Add new task">+ Add Task</button>
+                    <button class="action-btn" id="filterTaskBtn" title="Filter tasks">Filter</button>
+                    <button class="action-btn" id="replicateTaskBtn" title="Replicate tasks">Replicate</button>
+                </div>
+            </div>
+
+            <!-- Dashboard/KPI -->
+            <div class="dashboard">
+                <div class="kpi-card">
+                    <div class="kpi-label">Total Tasks</div>
+                    <div class="kpi-value" id="totalTasks">0</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Completed</div>
+                    <div class="kpi-value" id="completedTasks">0</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Pending</div>
+                    <div class="kpi-value" id="pendingTasks">0</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Day Streak</div>
+                    <div class="kpi-value" id="dayStreak">0</div>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-container">
+                <div class="progress-label">Completion Progress</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+                <div class="progress-text" id="progressText">0%</div>
+            </div>
+
+            <!-- Task List -->
+            <div class="task-list" id="taskList"></div>
+
+            <!-- Filter Modal -->
+            <div class="modal" id="filterModal">
+                <div class="modal-content">
+                    <h3>Filter Tasks</h3>
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" id="filterDate" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label>Priority</label>
+                        <select id="filterPriority" class="form-input">
+                            <option value="">All</option>
+                            <option value="High">High</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Low">Low</option>
+                        </select>
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn btn-primary" id="applyFilter">Apply</button>
+                        <button class="btn btn-secondary" id="clearFilter">Clear</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add/Edit Task Modal -->
+            <div class="modal" id="taskModal">
+                <div class="modal-content">
+                    <h3 id="taskModalTitle">Add Task</h3>
+                    <form id="taskForm">
+                        <input type="hidden" id="taskId">
+                        <div class="form-group">
+                            <label>Task Name *</label>
+                            <input type="text" id="taskName" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea id="taskDescription" class="form-input" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Priority</label>
+                            <select id="taskPriority" class="form-input">
+                                <option value="Low">Low</option>
+                                <option value="Medium" selected>Medium</option>
+                                <option value="High">High</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Date</label>
+                            <input type="date" id="taskDate" class="form-input" required>
+                        </div>
+                        <div class="modal-actions">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="button" class="btn btn-secondary" id="cancelTask">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Replicate Modal -->
+            <div class="modal" id="replicateModal">
+                <div class="modal-content">
+                    <h3>Replicate Task</h3>
+                    <div class="form-group">
+                        <label>Select Task</label>
+                        <select id="replicateTaskSelect" class="form-input"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Target Date</label>
+                        <input type="date" id="replicateTargetDate" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label>End Date (optional, for range)</label>
+                        <input type="date" id="replicateEndDate" class="form-input">
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn btn-primary" id="applyReplicate">Replicate</button>
+                        <button class="btn btn-secondary" id="cancelReplicate">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Habit Tracker Page -->
+        <section class="page" id="habitsPage">
+            <div class="page-header">
+                <h2>Habit Tracker</h2>
+                <button class="action-btn" id="addHabitBtn">+ Add Habit</button>
+            </div>
+            <div class="habits-container" id="habitsContainer"></div>
+
+            <!-- Add Habit Modal -->
+            <div class="modal" id="habitModal">
+                <div class="modal-content">
+                    <h3>Add Habit</h3>
+                    <form id="habitForm">
+                        <div class="form-group">
+                            <label>Habit Name *</label>
+                            <input type="text" id="habitName" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Start Date</label>
+                            <input type="date" id="habitStartDate" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Duration (days)</label>
+                            <input type="number" id="habitDuration" class="form-input" value="21" min="1" required>
+                        </div>
+                        <div class="modal-actions">
+                            <button type="submit" class="btn btn-primary">Create</button>
+                            <button type="button" class="btn btn-secondary" id="cancelHabit">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Meditation Page -->
+        <section class="page" id="meditationPage">
+            <div class="page-header">
+                <h2>Meditation</h2>
+            </div>
+            <div class="meditation-container">
+                <div class="tracks-section">
+                    <h3>Select Track</h3>
+                    <div class="tracks-list" id="tracksList"></div>
+                </div>
+                <div class="timer-section">
+                    <h3>Meditation Timer</h3>
+                    <audio id="meditationAudio" preload="auto"></audio>
+                    <div class="timer-display" id="meditationTimer">00:00</div>
+                    <div class="timer-controls">
+                        <input type="range" id="timerDuration" min="5" max="20" value="10" step="1">
+                        <div class="timer-label">
+                            <span>5 min</span>
+                            <span id="selectedDuration">10 min</span>
+                            <span>20 min</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-large" id="startMeditation">Start Session</button>
+                    <button class="btn btn-secondary btn-large" id="stopMeditation" style="display: none;">Stop</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Study Timer Page -->
+        <section class="page" id="studyPage">
+            <div class="page-header">
+                <h2>Study Techniques</h2>
+            </div>
+            <div class="study-container">
+                <div class="technique-selector">
+                    <h3>Select a technique</h3>
+                    <div class="technique-cards" id="studyTechniqueCards"></div>
+                </div>
+                <div class="technique-details">
+                    <div class="technique-header">
+                        <div>
+                            <h3 id="techniqueTitle">Pick a technique</h3>
+                            <p id="techniqueSummary" class="text-muted">Choose a technique to see how it works.</p>
+                            <div id="techniqueTags" class="tag-row"></div>
+                        </div>
+                        <img id="techniqueImage" class="technique-image" src="" alt="Technique illustration" style="display:none;">
+                    </div>
+                    <div class="technique-body">
+                        <div id="techniqueWhy" class="technique-block"></div>
+                        <div id="techniqueHow" class="technique-block"></div>
+                        <div id="techniqueBest" class="technique-block"></div>
+                    </div>
+                    <div class="timer-section" id="studyTimerSection" style="display:none;">
+                        <div class="timer-display" id="studyTimer">00:00</div>
+                        <div class="timer-status" id="timerStatus">Ready to start</div>
+                        <div class="timer-controls">
+                            <button class="btn btn-primary btn-large" id="startStudy">Start</button>
+                            <button class="btn btn-secondary btn-large" id="pauseStudy" style="display: none;">Pause</button>
+                            <button class="btn btn-secondary btn-large" id="resetStudy">Reset</button>
+                        </div>
+                        <p class="text-muted" id="timerNote"></p>
+                        <div class="session-history">
+                            <h4>Recent Sessions</h4>
+                            <div id="sessionHistory"></div>
+                        </div>
+                    </div>
+                    <div id="noTimerNote" class="technique-block" style="display:none;">
+                        <strong>This technique does not use a timer.</strong>
+                        <p>Focus on following the steps above.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stories Page -->
+        <section class="page" id="storiesPage">
+            <div class="page-header">
+                <h2>Motivational Stories</h2>
+                <div class="search-container">
+                    <input type="text" id="storySearch" class="search-input" placeholder="Search by person name...">
+                    <button class="btn btn-secondary" id="showFavorites">Show Favorites</button>
+                </div>
+            </div>
+            <div class="stories-container" id="storiesContainer"></div>
+        </section>
+    </main>
+
+    <!-- Story Modal -->
+    <div class="modal" id="storyModal">
+        <div class="modal-content story-modal">
+            <button class="btn btn-secondary btn-small" id="closeStoryModal" style="float:right;">Close</button>
+            <h3 id="storyModalTitle"></h3>
+            <p class="text-muted" id="storyModalPerson"></p>
+            <div id="storyModalBody" class="story-modal-body"></div>
+        </div>
+    </div>
+
+    <script src="/indexeddb.js"></script>
+    <script src="/app.js"></script>
+    <script>
+        // Register service worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('Service Worker registered'))
+                    .catch(err => console.log('Service Worker registration failed'));
+            });
+        }
+    </script>
+</body>
+</html>
